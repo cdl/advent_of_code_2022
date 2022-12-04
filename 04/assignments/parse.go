@@ -26,6 +26,15 @@ func (a *Assignment) IsWithin(b *Assignment) bool {
 	return false
 }
 
+// Check to see if the current assignment overlaps the given one at all.
+func (a *Assignment) DoesOverlap(b *Assignment) bool {
+	if (a.End >= b.Start && a.End <= b.End) || (a.Start >= b.Start && a.Start <= b.End) {
+		return true
+	}
+
+	return false
+}
+
 // For a given "assignment" string (looks like `1-3`), parse out the start
 // and end section numbers and create a new Assignment for it.
 func ParseAssignment(in string) *Assignment {

@@ -10,14 +10,13 @@ import (
 func main() {
 	in := utils.ReadFileString("input")
 	parsed := assignments.ParseAssignmentList(in)
-	var eitherWithin []bool
+	var doesOverlap []bool
 
 	for _, i := range parsed {
-		if i[0].IsWithin(i[1]) || i[1].IsWithin(i[0]) {
-			eitherWithin = append(eitherWithin, true)
+		if i[0].DoesOverlap(i[1]) || i[1].DoesOverlap(i[0]) {
+			doesOverlap = append(doesOverlap, true)
 		}
 	}
 
-	fmt.Println(len(eitherWithin))
-
+	fmt.Println(len(doesOverlap))
 }
