@@ -72,14 +72,19 @@ func ParseInputFile(in string) []string {
 		to, err := strconv.Atoi(i[3])
 		utils.Check(err)
 
-		for x := 0; x < quantity; x++ {
-			fromIndex := from - 1
-			toIndex := to - 1
-			moved := stacks[fromIndex].Pop()
+		fromIndex := from - 1
+		toIndex := to - 1
 
-			fmt.Printf("moving rune %v from %v to %v\n", string(moved), from, to)
-			stacks[toIndex].Push(moved)
-		}
+		moved := stacks[fromIndex].PopMany(quantity)
+		fmt.Printf("moving `%v` from %v to %v\n", string(moved), from, to)
+		stacks[toIndex].PushMany(moved...)
+
+		// for x := 0; x < quantity; x++ {
+		// 	moved := stacks[fromIndex].Pop()
+
+		// 	fmt.Printf("moving rune %v from %v to %v\n", string(moved), from, to)
+		// 	stacks[toIndex].Push(moved)
+		// }
 	}
 
 	fmt.Printf("Final state: %v\n", stacks)

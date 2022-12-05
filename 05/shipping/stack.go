@@ -54,6 +54,7 @@ func (s *Stack) PushMany(chars ...rune) {
 		panic(fmt.Sprintf("stack overflow adding %v to stack %+v", string(chars), s))
 	}
 
+	s.CurrentIndex += len(chars)
 	s.Items = append(s.Items, chars...)
 }
 
@@ -73,7 +74,7 @@ func (s *Stack) Pop() rune {
 
 // Pop an arbitrary amount of items off the top of the stack, preserving their order.
 func (s *Stack) PopMany(quantity int) []rune {
-
+	s.CurrentIndex -= quantity
 	popped := s.Items[len(s.Items)-quantity : len(s.Items)]
 	s.Items = s.Items[:len(s.Items)-quantity]
 
