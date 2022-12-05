@@ -47,6 +47,16 @@ func (s *Stack) Push(r rune) {
 	s.Items = append(s.Items, r)
 }
 
+func (s *Stack) PushMany(chars ...rune) {
+	// if the struct has a max length & it's at its limit,
+	// return a panic overflow
+	if (s.MaxLength != -1) && (s.MaxLength == s.CurrentIndex+len(chars)) {
+		panic(fmt.Sprintf("stack overflow adding %v to stack %+v", string(chars), s))
+	}
+
+	s.Items = append(s.Items, chars...)
+}
+
 // Pop off the last item of the stack and return it.
 func (s *Stack) Pop() rune {
 	// panic if the stack is empty
@@ -59,6 +69,15 @@ func (s *Stack) Pop() rune {
 	s.CurrentIndex -= 1
 
 	return r
+}
+
+// Pop an arbitrary amount of items off the top of the stack, preserving their order.
+func (s *Stack) PopMany(quantity int) []rune {
+
+	popped := s.Items[len(s.Items)-quantity : len(s.Items)]
+	s.Items = s.Items[:len(s.Items)-quantity]
+
+	return popped
 }
 
 func (s *Stack) Peek() rune {
