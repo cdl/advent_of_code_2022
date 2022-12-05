@@ -3,6 +3,8 @@ package parsing
 import (
 	"fmt"
 	"math"
+	"regexp"
+	"strconv"
 	"strings"
 	"unicode/utf8"
 
@@ -16,7 +18,6 @@ func ParseInputFile(in string) []string {
 	parts := strings.Split(t, "\n\n")
 
 	header := strings.Split(parts[0], "\n")
-	// instructions := strings.Split(parts[1], "\n")
 
 	// regex, err := regexp.Compile(`\[([A-Z])\]`)
 	// utils.Check(err)
@@ -32,9 +33,9 @@ func ParseInputFile(in string) []string {
 
 	var stacks []*shipping.Stack
 
-	// Instead of splitting on whitespace and properly parsing out [A] [B] [C] tokens
+	// Instead of splitting on whitespace or using regex to parse out [A] [B] [C] tokens,
 	// I'm opting to rely on consistency in whitespacing etc in the input and am using
-	// character offsets to substring here in order to find the character.
+	// character offsets to generate substrings.
 	for x := 0; x < columns; x++ {
 		var chars []rune
 		for y := 0; y < rows-1; y++ {
@@ -43,6 +44,7 @@ func ParseInputFile(in string) []string {
 			char, _ := utf8.DecodeRuneInString(line[3*x+x+1 : 3*x+x+2])
 
 			if char == ' ' {
+				// skip any empty slots
 				continue
 			}
 
@@ -52,7 +54,41 @@ func ParseInputFile(in string) []string {
 		stacks = append(stacks, shipping.NewStack(-1, chars...))
 	}
 
+	// ! Instead of creating some form of object to contain a list of Stacks and
+	// ! a Move() function, I'm opting to do it all inline here.
+
+	// Finished assembling the stacks. Let's parse out the instructions.
+	regex, err := regexp.Compile(`move ([0-9]+) from ([0-9]+) to ([0-9]+)`)
+	utils.Check(err)
+
+	instructions := regex.FindAllStringSubmatch(parts[1], -1)
+	for _, i := range instructions {
+		quantity, err := strconv.Atoi(i[1])
+		utils.Check(err)
+
+		from, err := strconv.Atoi(i[2])
+		utils.Check(err)
+
+		to, err := strconv.Atoi(i[3])
+		utils.Check(err)
+
+		for x := 0; x < quantity; x++ {
+			fromIndex := from - 1
+			toIndex := to - 1
+			moved := stacks[fromIndex].Pop()
+
+			fmt.Printf("moving rune %v from %v to %v\n", string(moved), from, to)
+			stacks[toIndex].Push(moved)
+		}
+	}
+
 	fmt.Println(stacks)
+	// lastly, output the rune on top of each stack
+	for _, stack := range stacks {
+		fmt.Print(string(stack.Peek()))
+	}
+
+	fmt.Println()
 
 	return []string{}
 }

@@ -23,8 +23,13 @@ func NewStack(maxLength int, chars ...rune) *Stack {
 
 	s := &Stack{
 		MaxLength:    maxLength,
-		CurrentIndex: len(chars) - 1,
-		Items:        chars,
+		CurrentIndex: -1,
+	}
+
+	// Ideally we'd reverse this inline here but I'll just manually push to create
+	// new stacks to get the same effect.
+	for x, _ := range chars {
+		s.Push(chars[len(chars)-1-x])
 	}
 
 	return s
@@ -54,4 +59,13 @@ func (s *Stack) Pop() rune {
 	s.CurrentIndex -= 1
 
 	return r
+}
+
+func (s *Stack) Peek() rune {
+	// panic if the stack is empty
+	if s.CurrentIndex == -1 {
+		panic("attempted to Peek() an empty stack!")
+	}
+
+	return s.Items[s.CurrentIndex]
 }

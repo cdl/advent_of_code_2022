@@ -14,6 +14,6 @@ func main() {
 	// z := shipping.NewStack(-1, 'a', 'b', 'c', 'd', 'e')
 	// fmt.Println(z)
 
-	parsing.ParseInputFile("control")
-	// parsing.ParseInputFile("input")
+	// parsing.ParseInputFile("control")
+	parsing.ParseInputFile("input")
 }
