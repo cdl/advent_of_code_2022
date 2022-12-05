@@ -82,7 +82,8 @@ func ParseInputFile(in string) []string {
 		}
 	}
 
-	fmt.Println(stacks)
+	fmt.Printf("Final state: %v\n", stacks)
+
 	// lastly, output the rune on top of each stack
 	for _, stack := range stacks {
 		fmt.Print(string(stack.Peek()))

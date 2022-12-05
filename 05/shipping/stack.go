@@ -9,7 +9,7 @@ type Stack struct {
 }
 
 func (s Stack) String() string {
-	return fmt.Sprintf("[%v,%v,%v]", s.MaxLength, s.Items, string(s.Items))
+	return fmt.Sprintf("[%v]", string(s.Items))
 }
 
 // Create a new stack with the given max length and (optional) runes.
@@ -28,7 +28,7 @@ func NewStack(maxLength int, chars ...rune) *Stack {
 
 	// Ideally we'd reverse this inline here but I'll just manually push to create
 	// new stacks to get the same effect.
-	for x, _ := range chars {
+	for x := range chars {
 		s.Push(chars[len(chars)-1-x])
 	}
 
@@ -42,7 +42,7 @@ func (s *Stack) Push(r rune) {
 		panic(fmt.Sprintf("stack overflow adding %v to stack %+v", string(r), s))
 	}
 
-	fmt.Println("Pushing to index:", s.CurrentIndex+1, " rune ", r)
+	// fmt.Println("Pushing to index:", s.CurrentIndex+1, " rune ", r)
 	s.CurrentIndex += 1
 	s.Items = append(s.Items, r)
 }
